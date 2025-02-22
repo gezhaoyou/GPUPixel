@@ -92,11 +92,11 @@ GPUPixelContext::GPUPixelContext()
       captureUpToFilter(0),
       capturedFrameData(0) {
   _framebufferCache = new FramebufferCache();
-  task_queue_ = std::make_shared<LocalDispatchQueue>();
   init();
 }
 
 GPUPixelContext::~GPUPixelContext() {
+  dispatch_queue_.dispatch_flush();
   releaseContext();
   delete _framebufferCache;
 }
@@ -336,19 +336,18 @@ void GPUPixelContext::releaseContext() {
   }
 #endif
 }
- 
-void GPUPixelContext::runSync(std::function<void(void)> func) {
-  // todo fix android 
-#if defined(GPUPIXEL_ANDROID)
-  func();
-#else
-  task_queue_->add([=]() {
-      useAsCurrent();
-      func();
-  });
-  task_queue_->processOne();
-#endif
 
+void GPUPixelContext::runSync(std::function<void(void)> func) {
+    // todo fix android
+#if defined(GPUPIXEL_ANDROID)
+    func();
+#else
+ 
+    dispatch_queue_.dispatch_sync([=](){
+        useAsCurrent();
+        func();
+    });
+#endif
 }
 
 NS_GPUPIXEL_END

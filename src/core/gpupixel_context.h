@@ -69,8 +69,8 @@ class GPUPIXEL_API GPUPixelContext {
   static std::mutex _mutex;
   FramebufferCache* _framebufferCache;
   GLProgram* _curShaderProgram;
-  std::shared_ptr<LocalDispatchQueue> task_queue_;
   
+  dispatch_queue dispatch_queue_;
 #if defined(GPUPIXEL_ANDROID)
   bool context_inited = false;
   int m_surfacewidth;
