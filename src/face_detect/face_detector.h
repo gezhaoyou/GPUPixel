@@ -11,7 +11,9 @@
 #include <functional>
 #include <vector>
 #include "gpupixel_macros.h"
-
+namespace mars_face_kit {
+    class MarsFaceDetector;
+}
 NS_GPUPIXEL_BEGIN
 GPUPIXEL_API typedef std::function<void(std::vector<float> landmarks)>
 FaceDetectorCallback;
@@ -42,8 +44,7 @@ class GPUPIXEL_API FaceDetector {
       
         int RegCallback(FaceDetectorCallback callback);
     private:
-        uint32_t vnn_handle_;
-        int use_278pts = 0;
         std::vector<FaceDetectorCallback> _face_detector_callbacks;
+        std::shared_ptr<mars_face_kit::MarsFaceDetector> mars_face_detector_;
     };
 NS_GPUPIXEL_END

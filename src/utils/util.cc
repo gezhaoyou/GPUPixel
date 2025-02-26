@@ -20,14 +20,14 @@
 #endif
  
 #if defined(GPUPIXEL_IOS) || defined(GPUPIXEL_MAC)
-@interface ObjcHelper : NSObject
+@interface GPXObjcHelper : NSObject
 + (NSString*)getResourcePath:(NSString*)name;
 + (NSString*)getBundleResourceWithName:(NSString*)bundleName
                               fileName:(NSString*)fileName
                                   type:(NSString*)fileType;
 @end
 
-@implementation ObjcHelper
+@implementation GPXObjcHelper
 
 + (NSString*)getResourcePath:(NSString*)name {
   NSString* path = [[[NSBundle bundleForClass:self.class] resourcePath]
@@ -63,7 +63,7 @@ std::string Util::resourceRoot = "";
 
 std::string Util::getResourcePath(std::string name) {
 #if defined(GPUPIXEL_IOS) || defined(GPUPIXEL_MAC)
-  NSString* oc_path = [ObjcHelper
+  NSString* oc_path = [GPXObjcHelper
       getResourcePath:[[NSString alloc] initWithUTF8String:name.c_str()]];
   std::string path = [oc_path UTF8String];
 #elif defined(GPUPIXEL_ANDROID)
@@ -81,7 +81,7 @@ void Util::setResourceRoot(std::string root) {
 std::string Util::getResourcePath(std::string bundle_name,
                                   std::string file_name,
                                   std::string type) {
-  NSString* oc_path = [ObjcHelper
+  NSString* oc_path = [GPXObjcHelper
       getBundleResourceWithName:[[NSString alloc]
                                     initWithUTF8String:bundle_name.c_str()]
                        fileName:[[NSString alloc]
@@ -184,14 +184,16 @@ int64_t Util::nowTimeMs() {
   return ts;
 }
 
-void Util::Log(const std::string& tag,std::string format, ...) {
+ void Util::Log(const std::string& tag, std::string format, ...) {
   char buffer[10240];
   va_list args;
   va_start(args, format);
 #if defined(GPUPIXEL_WIN)
-  // vsprintf(buffer, format.c_str(), args);
+  // 使用 vsnprintf_s 在 Windows 上
+  vsnprintf_s(buffer, sizeof(buffer), _TRUNCATE, format.c_str(), args);
 #else
-  vsprintf(buffer, format.c_str(), args);
+  // 使用 vsnprintf 在其他平台上
+  vsnprintf(buffer, sizeof(buffer), format.c_str(), args);
 #endif
   va_end(args);
 #if defined(GPUPIXEL_ANDROID)
@@ -199,7 +201,7 @@ void Util::Log(const std::string& tag,std::string format, ...) {
 #elif defined(GPUPIXEL_IOS) || defined(GPUPIXEL_MAC)
   NSLog(@"%s", buffer);
 #elif defined(GPUPIXEL_LINUX)
- printf("%s\n", buffer);
+  printf("%s\n", buffer);
 #endif
 }
 

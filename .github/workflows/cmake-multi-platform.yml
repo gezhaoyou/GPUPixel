@@ -22,7 +22,7 @@ jobs:
                   sudo apt-get install mesa-utils libglu1-mesa-dev freeglut3-dev mesa-common-dev libglfw3-dev
 
             - name: Configure 
-              run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+              run: cmake -B ${{github.workspace}}/build -S ${{ github.workspace }}/src -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
             - name: Build 
               run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
@@ -69,7 +69,7 @@ jobs:
               uses: msys2/setup-msys2@v2
 
             - name: Configure
-              run: cmake -G "MinGW Makefiles" -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+              run: cmake -G "MinGW Makefiles" -B ${{github.workspace}}/build -S ${{ github.workspace }}/src -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
             - name: Build Win shared x64 library
               run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
