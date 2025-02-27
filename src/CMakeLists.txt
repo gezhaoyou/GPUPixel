@@ -173,15 +173,10 @@ ELSEIF(${CURRENT_OS} STREQUAL "android")
     # 设置目标库的实际路径
     set_target_properties(mars-face-kit PROPERTIES IMPORTED_LOCATION
     ${CMAKE_CURRENT_SOURCE_DIR}/third_party/mars-face-kit/libs/${CURRENT_OS}/${ANDROID_ABI}/libmars-face-kit.a)
-	add_library(MNN SHARED IMPORTED)
-	# 设置目标库的实际路径
-	set_target_properties(MNN PROPERTIES IMPORTED_LOCATION
-	${CMAKE_CURRENT_SOURCE_DIR}/third_party/mnn/libs/${CURRENT_OS}/${ANDROID_ABI}/libMNN.so)
  
-	add_library(MNN_Express SHARED IMPORTED)
-	# 设置目标库的实际路径
-	set_target_properties(MNN_Express PROPERTIES IMPORTED_LOCATION
-	${CMAKE_CURRENT_SOURCE_DIR}/third_party/mnn/libs/${CURRENT_OS}/${ANDROID_ABI}/libMNN_Express.so)
+	add_library(MNN STATIC IMPORTED)
+	set_target_properties(MNN PROPERTIES IMPORTED_LOCATION
+	${CMAKE_CURRENT_SOURCE_DIR}/third_party/mnn/libs/${CURRENT_OS}/${ANDROID_ABI}/libMNN.a)
 	
 ELSEIF(${CURRENT_OS} STREQUAL "wasm")
 	set_target_properties(${PROJECT_NAME} PROPERTIES 
@@ -241,10 +236,8 @@ ELSEIF(${CURRENT_OS} STREQUAL "android")
 					GLESv3
 					EGL
 					jnigraphics
-					MNN
-					MNN_Express
-					atomic
-					mars-face-kit)
+					mars-face-kit
+					MNN)
 ENDIF()
 
 MACRO(EXPORT_INCLUDE)

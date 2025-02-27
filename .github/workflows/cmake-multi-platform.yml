@@ -16,6 +16,9 @@ jobs:
           BUILD_TYPE: Release
         steps:
             - uses: actions/checkout@v4
+           
+            - name: Pull LFS files
+              run: git lfs pull
             - name: Install dependencies
               run: |
                   sudo apt update
@@ -36,6 +39,9 @@ jobs:
         steps:
             - uses: actions/checkout@v4
 
+            - name: Pull LFS files
+              run: git lfs pull
+
             - name: Configure
               run: cmake -G Xcode -DCMAKE_TOOLCHAIN_FILE=${{github.workspace}}/toolchain/ios.toolchain.cmake -DPLATFORM=MAC_UNIVERSAL -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -S ${{ github.workspace }}/src
             - name: Build
@@ -51,6 +57,9 @@ jobs:
         steps:
             - uses: actions/checkout@v4
 
+            - name: Pull LFS files
+              run: git lfs pull
+
             - name: Configure
               run: cmake -G Xcode -DCMAKE_TOOLCHAIN_FILE=${{github.workspace}}/toolchain/ios.toolchain.cmake -DPLATFORM=OS64 -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -S ${{ github.workspace }}/src
             - name: Build
@@ -64,6 +73,9 @@ jobs:
             BUILD_TYPE: Release
         steps:
             - uses: actions/checkout@v4
+            
+            - name: Pull LFS files
+              run: git lfs pull
             
             - name: Set up MinGW
               uses: msys2/setup-msys2@v2
@@ -81,6 +93,14 @@ jobs:
             BUILD_TYPE: Release
         steps:
             - uses: actions/checkout@v4
+            - name: Install Git LFS
+              run: |
+                  sudo apt-get update
+                  sudo apt-get install git-lfs
+                  git lfs install
+            - name: Pull LFS files
+              run: git lfs pull
+
             - name: set up JDK 11
               uses: actions/setup-java@v3
               with:
